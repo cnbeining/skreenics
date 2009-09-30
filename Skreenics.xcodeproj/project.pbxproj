@@ -359,6 +359,7 @@
 				INFOPLIST_FILE = "Skreenics-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = Skreenics;
+				SDKROOT = macosx10.5;
 			};
 			name = Release;
 		};

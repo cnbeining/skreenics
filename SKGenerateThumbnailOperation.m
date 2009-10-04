@@ -138,6 +138,10 @@
     [videoItem setNumberOfSteps:[NSNumber numberWithUnsignedInteger:(5 + cols * rows)]];
 
     // ----------- Step 0: Init movie
+    if ([self isCancelled])
+    {
+        return ;
+    }
     [videoItem setProgressString:@"Opening movie..." incrementProgressValue:NO];
     movieFilePath = [videoItem filepath];
     NSDictionary* openAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -147,6 +151,12 @@
     movie = [[QTMovie alloc] initWithAttributes:openAttributes error:nil];
 
     // ----------- Step 1: Check if the movie actually has a movie track
+    if ([self isCancelled])
+    {
+        [movie release];
+        [QTMovie exitQTKitOnThread];
+        return ;
+    }
     [videoItem setProgressString:@"Checking if file has a movie track..." incrementProgressValue:YES];
     if ([[movie tracksOfMediaType:QTMediaTypeVideo] count] == 0)
     {
@@ -183,6 +193,12 @@
     }
 
     // ----------- Step 3: create original image
+    if ([self isCancelled])
+    {
+        [movie release];
+        [QTMovie exitQTKitOnThread];
+        return ;
+    }
     [videoItem setProgressString:@"Creating initial image..." incrementProgressValue:YES];
 
     // Allocate the image in which we will draw, erase everything, and set ready to draw
@@ -214,6 +230,15 @@
         for (col = 0; col < cols; col++)
         {
             // ----------- Step 4: create thumbnail
+            if ([self isCancelled])
+            {
+                [resultImage unlockFocus];
+                [resultImage release];
+                [thumbnailShadow release];
+                [movie release];
+                [QTMovie exitQTKitOnThread];
+                return ;
+            }
             [videoItem setProgressString:[NSString stringWithFormat:@"Processing frame %d of %d...", (int)((row * cols) + col) + 1, (int)(rows * cols)]
                   incrementProgressValue:YES];
 
@@ -246,21 +271,24 @@
     [resultImage unlockFocus];
 
     // ----------- Step 5: Write result to HD
-    [videoItem setProgressString:@"Writing image..." incrementProgressValue:YES];
-
-    // Write the result on the hard drive
-    if ([userDefaults boolForKey:kSKPreferMovieFileFolderPrefKey])
+    if ([self isCancelled] == NO)
     {
-        savePath = [[movieFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"png"];
+        [videoItem setProgressString:@"Writing image..." incrementProgressValue:YES];
+        
+        // Write the result on the hard drive
+        if ([userDefaults boolForKey:kSKPreferMovieFileFolderPrefKey])
+        {
+            savePath = [[movieFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"png"];
+        }
+        else
+        {
+            NSString*   outputFolder = [[userDefaults objectForKey:kSKOuputFolderPrefKey] stringByExpandingTildeInPath];
+            NSString*   outputFileName = [[[videoItem filename] stringByDeletingPathExtension] stringByAppendingPathExtension:@"png"];
+            savePath = [outputFolder stringByAppendingPathComponent:outputFileName];
+        }
+        NSBitmapImageRep* repr = [NSBitmapImageRep imageRepWithData:[resultImage TIFFRepresentation]];
+        [[repr representationUsingType:NSPNGFileType properties:nil] writeToFile:savePath atomically:YES];
     }
-    else
-    {
-        NSString*   outputFolder = [[userDefaults objectForKey:kSKOuputFolderPrefKey] stringByExpandingTildeInPath];
-        NSString*   outputFileName = [[[videoItem filename] stringByDeletingPathExtension] stringByAppendingPathExtension:@"png"];
-        savePath = [outputFolder stringByAppendingPathComponent:outputFileName];
-    }
-    NSBitmapImageRep* repr = [NSBitmapImageRep imageRepWithData:[resultImage TIFFRepresentation]];
-    [[repr representationUsingType:NSPNGFileType properties:nil] writeToFile:savePath atomically:YES];
 
     // Release all our manually allocated data
     [thumbnailShadow release];
@@ -270,7 +298,10 @@
     [QTMovie exitQTKitOnThread];
 
     // ----------- Done
-    [videoItem setProgressString:@"Done!" incrementProgressValue:YES];
+    if ([self isCancelled] == NO)
+    {
+        [videoItem setProgressString:@"Done!" incrementProgressValue:YES];
+    }
 }
 
 @end

@@ -30,6 +30,7 @@
 #define kSKPreferMovieFileFolderPrefKey @"SKPreferMovieFileFolder"
 #define kSKAddSubfoldersOnDropPrefKey @"SKAddSubfoldersOnDrop"
 #define kSKMaxConcurrentOperationsPrefKey @"SKMaximumConcurrentOperations"
+#define kSKImageFormatPrefKey @"SKImageFormatPrefKey"
 #define kSKImageFileWidthPrefKey @"SKImageFileWidth"
 #define kSKSpacingBetweenThumbnailsPrefKey @"SKSpacingBetweenThumbnails"
 #define kSKNumberOfRowsPrefKey @"SKNumberOfRows"
@@ -38,3 +39,10 @@
 #define kSKImageShadowColorPrefKey @"SKImageShadowColor"
 #define kSKImageMovieInfoColorPrefKey @"SKImageMovieInfoColor"
 
+// ...
+typedef struct sk_prefs_format
+{
+    NSString*               displayName;
+    NSString*               extension;
+    NSBitmapImageFileType   file_type;
+}       SKFileTypes;

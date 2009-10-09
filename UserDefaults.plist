@@ -8,6 +8,8 @@
 	<false/>
 	<key>SKAddSubfoldersOnDrop</key>
 	<false/>
+	<key>SKImageFormatPrefKey</key>
+	<string>PNG</string>
 	<key>SKMaximumConcurrentOperations</key>
 	<integer>4</integer>
 	<key>SKImageFileWidth</key>

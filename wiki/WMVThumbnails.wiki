@@ -1,4 +1,5 @@
 #summary Configure Flip4Mac to make it work with Skreenics
+#labels Featured
 
 = !Flip4Mac =
 

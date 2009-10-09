@@ -1,0 +1,13 @@
+#summary Skreenics Versions History
+#labels Featured
+
+== 1.0.1 ==
+  * <font color="blue">*FIX*</font> - Skreenics now correctly handle files with MPEG tracks
+  * <font color="green">*ADD*</font> - It is now possible to choose the output format, between JPG and PNG.
+
+== 1.0 ==
+  * <font color="green">*ADD*</font> - An icon! Yay.
+  * <font color="blue">*FIX*</font> - Removing a runnign task actually cancel it
+
+== 1.0b1 ==
+ * XXX - First release

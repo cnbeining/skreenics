@@ -1,8 +1,8 @@
 #summary Configure Flip4Mac to make it work with Skreenics
 
-= Flip4Mac =
+= !Flip4Mac =
 
-The current Flip4Mac beta (*2.3.0.11-BETA*) that supports Snow Leopard brings a new setting that allows applications to load WMV files in the background. [http://www.telestream.net/telestream-support/flip4mac-wmv/faq.htm#3 See this page].
+The current !Flip4Mac beta (*2.3.0.11-BETA*) that supports Snow Leopard brings a new setting that allows applications to load WMV files in the background. [http://www.telestream.net/telestream-support/flip4mac-wmv/faq.htm#3 See this page].
 
 However, this setting doesn't work really well for Skreenics. The application loads the file entirely, to calculate duration and capture all necessary frames. However, Flip4Mac tells Skreenics the files is entirely loaded when actually it is not, and it creates thumbnails of videos as if they were 10 seconds long.
 

@@ -158,7 +158,7 @@
         return ;
     }
     [videoItem setProgressString:@"Checking if file has a movie track..." incrementProgressValue:YES];
-    if ([[movie tracksOfMediaType:QTMediaTypeVideo] count] == 0)
+    if ([[movie tracksOfMediaType:QTMediaTypeVideo] count] == 0 && [[movie tracksOfMediaType:QTMediaTypeMPEG] count] == 0)
     {
         [videoItem setError:@"File does not contain a video track"];
         [movie release];

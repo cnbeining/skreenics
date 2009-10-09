@@ -9,8 +9,68 @@
 #import "SKPreferencesController.h"
 #import "SKDefines.h"
 
+static SKFileTypes gl_skAvailableFileTypes[] = {
+    {@"PNG",  @"png", NSPNGFileType},
+    {@"JPEG", @"jpg", NSJPEGFileType},
+    {nil, nil, 0}
+};
 
 @implementation SKPreferencesController
+
+- (id)init
+{
+    if (self = [super init])
+    {
+        int i;
+
+        fileTypes = [[NSMutableArray alloc] init];
+        for (i = 0; gl_skAvailableFileTypes[i].displayName; i++)
+        {
+            [fileTypes addObject:(gl_skAvailableFileTypes[i].displayName)];
+        }
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [fileTypes release];
+    [super dealloc];
+}
+
+#pragma mark Class methods
+
++ (NSBitmapImageFileType)imageFileType
+{
+    NSString*               imageFormatFromPrefs = [[NSUserDefaults standardUserDefaults] objectForKey:kSKImageFormatPrefKey];
+    int                     i;
+    
+    for (i = 0; gl_skAvailableFileTypes[i].displayName; i++)
+    {
+        if ([gl_skAvailableFileTypes[i].displayName isEqualToString:imageFormatFromPrefs])
+        {
+            return gl_skAvailableFileTypes[i].file_type;
+        }
+    }
+    return NSPNGFileType;
+}
+
++ (NSString *)imageFileExtension
+{
+    NSString*               imageFormatFromPrefs = [[NSUserDefaults standardUserDefaults] objectForKey:kSKImageFormatPrefKey];
+    int                     i;
+    
+    for (i = 0; gl_skAvailableFileTypes[i].displayName; i++)
+    {
+        if ([gl_skAvailableFileTypes[i].displayName isEqualToString:imageFormatFromPrefs])
+        {
+            return gl_skAvailableFileTypes[i].extension;
+        }
+    }
+    return @"png";
+}
+
+#pragma mark UI
 
 - (IBAction)showPreferences:(id)sender
 {

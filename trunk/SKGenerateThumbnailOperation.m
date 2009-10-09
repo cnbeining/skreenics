@@ -8,12 +8,12 @@
 
 #import "SKGenerateThumbnailOperation.h"
 
+#import "SKPreferencesController.h"
 #import "SKProgressIndicator.h"
 #import "SKDefines.h"
 #import "NSStringAdditions.h"
 
 #define preferenceColorForKey(key) [[NSValueTransformer valueTransformerForName:@"SKRgbToNSColorTransformer"] transformedValue:[userDefaults valueForKey:key]]
-
 
 @implementation SKGenerateThumbnailOperation
 
@@ -273,21 +273,24 @@
     // ----------- Step 5: Write result to HD
     if ([self isCancelled] == NO)
     {
+        NSString*               imageExtension = [SKPreferencesController imageFileExtension];
+        NSBitmapImageFileType   imageFileType = [SKPreferencesController imageFileType];
+
         [videoItem setProgressString:@"Writing image..." incrementProgressValue:YES];
-        
+
         // Write the result on the hard drive
         if ([userDefaults boolForKey:kSKPreferMovieFileFolderPrefKey])
         {
-            savePath = [[movieFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"png"];
+            savePath = [[movieFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:imageExtension];
         }
         else
         {
             NSString*   outputFolder = [[userDefaults objectForKey:kSKOuputFolderPrefKey] stringByExpandingTildeInPath];
-            NSString*   outputFileName = [[[videoItem filename] stringByDeletingPathExtension] stringByAppendingPathExtension:@"png"];
+            NSString*   outputFileName = [[[videoItem filename] stringByDeletingPathExtension] stringByAppendingPathExtension:imageExtension];
             savePath = [outputFolder stringByAppendingPathComponent:outputFileName];
         }
         NSBitmapImageRep* repr = [NSBitmapImageRep imageRepWithData:[resultImage TIFFRepresentation]];
-        [[repr representationUsingType:NSPNGFileType properties:nil] writeToFile:savePath atomically:YES];
+        [[repr representationUsingType:imageFileType properties:nil] writeToFile:savePath atomically:YES];
     }
 
     // Release all our manually allocated data

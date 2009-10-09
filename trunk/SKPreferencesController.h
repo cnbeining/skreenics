@@ -11,6 +11,8 @@
 
 @interface SKPreferencesController : NSObject
 {
+    NSMutableArray*         fileTypes;
+
     IBOutlet NSWindow*      window;
 
     // Global Prefs
@@ -18,6 +20,9 @@
     IBOutlet NSMenuItem*    menuItem_sameAsVideoFolder;
     IBOutlet NSPopUpButton* popup_downloadFolder;
 }
+
++ (NSBitmapImageFileType)imageFileType;
++ (NSString *)imageFileExtension;
 
 - (void)selectMenuItemFromPrefs;
 
